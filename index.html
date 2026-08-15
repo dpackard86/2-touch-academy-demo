@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d2f9a">
+<title>2 Touch Academy — Coach Demo</title>
+<style>
+:root{
+  --blue:#1746d1;--blue2:#0d2f9a;--sky:#eef4ff;--ink:#10213d;--muted:#6e7d94;
+  --line:#dce4ef;--bg:#f4f7fb;--good:#11895c;--warn:#e7a329;--danger:#c84646;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,textarea{font:inherit}
+.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:92px}
+header{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,var(--blue2),var(--blue));color:white;padding:16px 18px;box-shadow:0 5px 20px rgba(10,30,100,.18)}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand-left{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:15px;background:white;color:var(--blue);display:grid;place-items:center;font-weight:900}
+.brand h1{margin:0;font-size:19px}.brand p{margin:3px 0 0;font-size:11px;opacity:.85}
+.demo{font-size:10px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);padding:6px 9px;border-radius:999px;font-weight:800}
+main{padding:16px}.screen{display:none}.screen.active{display:block}
+.card{background:white;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(20,50,100,.07);margin-bottom:14px}
+.hero-card{background:linear-gradient(160deg,#fff,#f6f9ff)}
+h2,h3,h4{margin-top:0}.muted{color:var(--muted);font-size:12px;line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stat b{display:block;font-size:22px}.stat span{font-size:10px;color:var(--muted)}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px}.section-title h3{margin:0;font-size:16px}.section-title span{font-size:11px;color:var(--muted)}
+.roster{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.player-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;cursor:pointer}
+.player-top{display:flex;gap:10px;align-items:center}.avatar{width:44px;height:44px;border-radius:50%;background:#dfe9ff;color:var(--blue);display:grid;place-items:center;font-weight:900}
+.player-card h4{margin:0;font-size:14px}.tag{display:inline-block;margin-top:7px;font-size:9px;font-weight:800;background:var(--sky);color:var(--blue2);padding:5px 7px;border-radius:999px}
+.progress{height:7px;background:#edf1f5;border-radius:999px;overflow:hidden;margin-top:9px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#6aa8ff)}
+.btn{width:100%;border:0;border-radius:14px;padding:13px 14px;font-weight:850;cursor:pointer}
+.primary{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff}
+.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.danger{background:#fff;color:var(--danger);border:1px solid #efcaca}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goal{border-left:4px solid var(--blue);background:#f7f9ff;border-radius:12px;padding:11px;margin:8px 0}.goal b{font-size:12px}.goal p{margin:4px 0 0;font-size:10px;color:var(--muted)}
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.skill{border:1px solid var(--line);border-radius:14px;padding:11px}.skilltop{display:flex;justify-content:space-between;font-size:11px;font-weight:800}
+textarea,input{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px;background:#fff;color:var(--ink)}
+textarea{min-height:92px;resize:vertical}
+.drill{border:1px solid var(--line);border-radius:16px;padding:13px;margin:9px 0}.drill h4{margin-bottom:4px}.drill p{font-size:11px;color:var(--muted);margin:0}
+.timer{font-size:64px;text-align:center;font-weight:900;letter-spacing:-3px;padding:12px 0}.timer-sub{text-align:center;font-size:10px;color:var(--muted);margin-top:-10px}
+.attempts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.attempt{background:#f7f9fc;border:1px solid var(--line);border-radius:13px;padding:10px;text-align:center}.attempt small{display:block;font-size:9px;color:var(--muted)}.attempt b{font-size:17px}
+.result-banner{background:#eef9f4;border:1px solid #cfe9dc;border-radius:14px;padding:12px;margin-top:12px}.result-banner b{color:var(--good)}
+.chart{height:180px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:end;padding:20px 7px 4px}.bar{flex:1;background:linear-gradient(#6ba8ff,var(--blue));border-radius:9px 9px 2px 2px;position:relative;min-width:28px}.bar b{position:absolute;top:-18px;width:100%;text-align:center;font-size:10px}.bar span{position:absolute;bottom:-17px;width:100%;text-align:center;font-size:8px;color:var(--muted)}
+.kpis{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.kpis span{font-size:9px;padding:6px 8px;border-radius:999px;background:#f2f5f9;color:#53627a}
+.back{border:0;background:transparent;color:var(--blue);font-weight:800;padding:0 0 12px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:98px;transform:translateX(-50%) translateY(25px);opacity:0;background:#10213d;color:#fff;padding:10px 14px;border-radius:999px;font-size:11px;font-weight:750;transition:.25s;z-index:100}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px calc(7px + env(safe-area-inset-bottom));z-index:60}
+nav button{border:0;background:transparent;color:#7b8798;font-size:9px;font-weight:800;padding:6px 2px;cursor:pointer}nav button strong{display:block;font-size:18px;margin-bottom:2px}nav button.active{color:var(--blue)}
+.smallgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fieldlabel{font-size:10px;font-weight:800;margin:10px 0 5px}
+@media(min-width:760px){.app{padding-bottom:28px}.stats{grid-template-columns:repeat(4,1fr)}.roster{grid-template-columns:repeat(4,1fr)}.skills{grid-template-columns:repeat(4,1fr)}nav{position:sticky;top:78px;max-width:1180px;margin:auto;border-radius:0 0 18px 18px}.two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="brand-left"><div class="logo">2T</div><div><h1>2 Touch Academy</h1><p>One team. Individual development journeys.</p></div></div>
+    <div class="demo">COACH LUCUS DEMO</div>
+  </div>
+</header>
+
+<nav>
+<button class="active" data-screen="dashboard"><strong>⌂</strong>Home</button>
+<button data-screen="roster"><strong>⚽</strong>Players</button>
+<button data-screen="drills"><strong>◉</strong>Drills</button>
+<button data-screen="progress"><strong>↗</strong>Progress</button>
+</nav>
+
+<main>
+<section id="dashboard" class="screen active">
+  <div class="card hero-card">
+    <h2>Welcome, Coach Lucus 👋</h2>
+    <p class="muted">A coach-first player development platform built to turn training observations into measurable progress, individualized goals and clear follow-up for every player.</p>
+    <div class="kpis"><span>Mobile first</span><span>Field ready</span><span>Individual goals</span><span>Parent visibility</span></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>12</b><span>Active players</span></div>
+    <div class="stat"><b>7</b><span>Assessments this month</span></div>
+    <div class="stat"><b>18</b><span>Goals in progress</span></div>
+    <div class="stat"><b>+14%</b><span>Avg. improvement</span></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h3>Needs attention</h3>
+      <div class="goal"><b>Liam — First touch under pressure</b><p>Next review Aug 21 • Improving steadily</p></div>
+      <div class="goal"><b>Ethan — Weak-foot passing</b><p>2 sessions remaining</p></div>
+      <div class="goal"><b>Noah — Acceleration baseline</b><p>Assessment due this week</p></div>
+      <button class="btn primary" onclick="openPlayer('Liam')">Open Liam's development plan</button>
+    </div>
+    <div class="card">
+      <h3>Today’s quick assessment</h3>
+      <p class="muted">10 m acceleration sprint • 3 attempts • best result auto-detected and added to player history.</p>
+      <button class="btn secondary" onclick="openAssessment()">Start live stopwatch</button>
+    </div>
+  </div>
+  <div class="section-title"><h3>Roster snapshot</h3><span>Tap a player</span></div>
+  <div class="roster" id="dashboardRoster"></div>
+</section>
+
+<section id="roster" class="screen">
+  <div class="section-title"><h3>Player roster</h3><span>Demo data only</span></div>
+  <div class="roster" id="fullRoster"></div>
+</section>
+
+<section id="player" class="screen">
+  <button class="back" onclick="showScreen('roster')">← Back to players</button>
+  <div class="card">
+    <div class="player-top"><div class="avatar" id="profileAvatar" style="width:62px;height:62px;font-size:21px">LM</div><div><h2 id="profileName">Liam</h2><p class="muted">U12 • Midfielder / Winger • #14</p></div></div>
+    <div class="kpis"><span>Attendance 94%</span><span>3 active goals</span><span>Last assessed Aug 8</span></div>
+  </div>
+  <div class="section-title"><h3>Development profile</h3><span>Current rating</span></div>
+  <div class="skills">
+    <div class="skill"><div class="skilltop"><span>First Touch</span><span>72</span></div><div class="progress"><span style="width:72%"></span></div></div>
+    <div class="skill"><div class="skilltop"><span>Passing</span><span>78</span></div><div class="progress"><span style="width:78%"></span></div></div>
+    <div class="skill"><div class="skilltop"><span>Speed</span><span>81</span></div><div class="progress"><span style="width:81%"></span></div></div>
+    <div class="skill"><div class="skilltop"><span>Decision Making</span><span>68</span></div><div class="progress"><span style="width:68%"></span></div></div>
+  </div>
+  <div class="two-col" style="margin-top:14px">
+    <div class="card">
+      <h3>Active goals</h3>
+      <div class="goal"><b>Improve first touch under pressure</b><p>Target: 8/10 controlled first touches • Current: 6/10</p></div>
+      <div class="goal"><b>Develop weak-foot passing</b><p>Target: 80% accuracy over 15 m • Current: 67%</p></div>
+      <button class="btn secondary" onclick="addGoal()">+ Add development goal</button>
+    </div>
+    <div class="card">
+      <h3>Coach note</h3>
+      <textarea id="coachNote"></textarea>
+      <br><button class="btn primary" onclick="saveNote()">Save note</button>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" onclick="openAssessment()">Run assessment</button>
+    <button class="btn secondary" onclick="showScreen('progress')">View progress</button>
+  </div>
+</section>
+
+<section id="drills" class="screen">
+  <div class="section-title"><h3>Drill library</h3><span>Academy + custom</span></div>
+  <div class="card">
+    <div class="drill"><h4>10 m Acceleration Sprint</h4><p>Three timed attempts. Best result saved automatically.</p><br><button class="btn primary" onclick="openAssessment()">Run assessment</button></div>
+    <div class="drill"><h4>Two-Touch Passing Gate</h4><p>Receive, open body shape and play through a target gate within two touches.</p><br><button class="btn secondary" onclick="toast('Added to today’s session')">Add to session</button></div>
+    <div class="drill"><h4>Pressure Box</h4><p>Ball retention in a tight space while reacting to passive and active pressure.</p><br><button class="btn secondary" onclick="toast('Added to today’s session')">Add to session</button></div>
+    <div class="drill"><h4>Weak-Foot Target Pass</h4><p>Ten passes at progressive distances scored for accuracy and technique.</p><br><button class="btn secondary" onclick="toast('Added to today’s session')">Add to session</button></div>
+    <button class="btn primary" onclick="toast('Custom drill builder opened')">+ Create custom drill</button>
+  </div>
+</section>
+
+<section id="assessment" class="screen">
+  <button class="back" onclick="showScreen('player')">← Back to player</button>
+  <div class="card">
+    <div class="section-title" style="margin-top:0"><h3>10 m Acceleration Sprint</h3><span id="assessPlayer">Liam</span></div>
+    <p class="muted">Tap Start when the player begins. Tap Stop at 10 metres. Each stopped time is stored as the next attempt.</p>
+    <div class="timer" id="timer">0.00</div><div class="timer-sub">seconds</div>
+    <div class="actions">
+      <button class="btn primary" id="timerBtn" onclick="toggleTimer()">Start</button>
+      <button class="btn secondary" onclick="resetCurrent()">Reset current</button>
+    </div>
+    <div class="attempts">
+      <div class="attempt"><small>Attempt 1</small><b id="a1">—</b></div>
+      <div class="attempt"><small>Attempt 2</small><b id="a2">—</b></div>
+      <div class="attempt"><small>Attempt 3</small><b id="a3">—</b></div>
+    </div>
+    <div id="bestBox" class="result-banner" style="display:none"></div>
+    <br><button class="btn primary" onclick="saveAssessment()">Save assessment</button>
+    <br><button class="btn danger" onclick="clearAttempts()">Clear attempts</button>
+  </div>
+  <div class="card">
+    <h3>Coach observation</h3>
+    <textarea id="assessmentNote" placeholder="Example: Strong first 3 steps; loses posture slightly at 6–8 m."></textarea>
+  </div>
+</section>
+
+<section id="progress" class="screen">
+  <div class="section-title"><h3>Progress & trends</h3><span id="progressPlayer">Liam</span></div>
+  <div class="card">
+    <h3>10 m Sprint</h3>
+    <p class="muted">Lower is better • saved demo results are stored locally on this device.</p>
+    <div class="chart" id="chart"></div>
+    <div class="result-banner" id="improvement"></div>
+  </div>
+  <div class="card">
+    <h3>Skill development</h3>
+    <div class="skills">
+      <div class="skill"><div class="skilltop"><span>First Touch</span><span>+9</span></div><div class="progress"><span style="width:72%"></span></div></div>
+      <div class="skill"><div class="skilltop"><span>Passing</span><span>+6</span></div><div class="progress"><span style="width:78%"></span></div></div>
+      <div class="skill"><div class="skilltop"><span>Speed</span><span>+12</span></div><div class="progress"><span style="width:81%"></span></div></div>
+      <div class="skill"><div class="skilltop"><span>Decision</span><span>+5</span></div><div class="progress"><span style="width:68%"></span></div></div>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const players=[
+['Liam','LM',82,'First touch'],['Ethan','ET',74,'Weak-foot passing'],['Noah','NH',69,'Acceleration'],['Lucas','LC',87,'Finishing'],
+['Mason','MS',76,'Scanning'],['Owen','OW',71,'1v1 defending'],['Jack','JK',84,'Passing range'],['Leo','LE',79,'Ball retention'],
+['Ben','BN',73,'Speed'],['Kai','KI',88,'Decision making'],['Adam','AD',77,'First touch'],['Sam','SM',75,'Finishing']
+];
+let selected='Liam', running=false, start=0, raf=null, attempts=[];
+
+function pkey(s){return '2ta_'+s.replace(/\s+/g,'_').toLowerCase()}
+function rosterCard(p){return `<div class="player-card" onclick="openPlayer('${p[0]}')"><div class="player-top"><div class="avatar">${p[1]}</div><div><h4>${p[0]}</h4><div class="muted">Development score ${p[2]}</div></div></div><span class="tag">Focus: ${p[3]}</span><div class="progress"><span style="width:${p[2]}%"></span></div></div>`}
+document.getElementById('dashboardRoster').innerHTML=players.slice(0,4).map(rosterCard).join('');
+document.getElementById('fullRoster').innerHTML=players.map(rosterCard).join('');
+
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen)));
+
+function showScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id || (id==='player'&&b.dataset.screen==='roster') || (id==='assessment'&&b.dataset.screen==='drills')));
+ if(id==='progress') renderProgress();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function openPlayer(name){
+ selected=name;
+ const p=players.find(x=>x[0]===name)||players[0];
+ document.getElementById('profileName').textContent=name;
+ document.getElementById('profileAvatar').textContent=p[1];
+ document.getElementById('assessPlayer').textContent=name;
+ document.getElementById('progressPlayer').textContent=name;
+ document.getElementById('coachNote').value=localStorage.getItem(pkey(name)+'_note') || (name==='Liam'?'Liam is carrying the ball with more confidence. Next focus is receiving on the back foot and releasing within two touches.':'');
+ attempts=[];
+ updateAttempts();
+ showScreen('player');
+}
+function openAssessment(){document.getElementById('assessPlayer').textContent=selected; attempts=[]; updateAttempts(); resetCurrent(); showScreen('assessment')}
+function tick(){
+ const elapsed=(performance.now()-start)/1000;
+ document.getElementById('timer').textContent=elapsed.toFixed(2);
+ raf=requestAnimationFrame(tick);
+}
+function toggleTimer(){
+ const btn=document.getElementById('timerBtn');
+ if(!running){
+   running=true; start=performance.now(); btn.textContent='Stop'; tick();
+ }else{
+   running=false; cancelAnimationFrame(raf); btn.textContent='Start';
+   const val=parseFloat(document.getElementById('timer').textContent);
+   if(attempts.length<3){attempts.push(val);updateAttempts();}else{toast('Three attempts already recorded')}
+ }
+}
+function resetCurrent(){
+ if(running){running=false; cancelAnimationFrame(raf)}
+ document.getElementById('timer').textContent='0.00';document.getElementById('timerBtn').textContent='Start';
+}
+function clearAttempts(){attempts=[];updateAttempts();resetCurrent();toast('Attempts cleared')}
+function updateAttempts(){
+ ['a1','a2','a3'].forEach((id,i)=>document.getElementById(id).textContent=attempts[i]!=null?attempts[i].toFixed(2)+'s':'—');
+ const box=document.getElementById('bestBox');
+ if(attempts.length){
+   const best=Math.min(...attempts);
+   box.style.display='block'; box.innerHTML=`<b>Best attempt: ${best.toFixed(2)}s</b><div class="muted">Automatically selected from ${attempts.length} recorded attempt${attempts.length>1?'s':''}.</div>`;
+ }else box.style.display='none';
+}
+function saveAssessment(){
+ if(!attempts.length){toast('Record at least one attempt first');return}
+ const best=Math.min(...attempts);
+ const key=pkey(selected)+'_results';
+ const existing=JSON.parse(localStorage.getItem(key)||'[]');
+ existing.push({date:new Date().toISOString(),best:best,note:document.getElementById('assessmentNote').value});
+ localStorage.setItem(key,JSON.stringify(existing));
+ toast(`Saved ${best.toFixed(2)}s for ${selected}`);
+ setTimeout(()=>showScreen('progress'),500);
+}
+function saveNote(){localStorage.setItem(pkey(selected)+'_note',document.getElementById('coachNote').value);toast('Coach note saved on this device')}
+function addGoal(){toast('Goal builder is ready for the next version')}
+function renderProgress(){
+ const defaults=[{date:'2026-06-14',best:2.31},{date:'2026-06-28',best:2.24},{date:'2026-07-12',best:2.18},{date:'2026-07-26',best:2.10},{date:'2026-08-08',best:2.04}];
+ const saved=JSON.parse(localStorage.getItem(pkey(selected)+'_results')||'[]');
+ const data=[...defaults,...saved].slice(-7);
+ const vals=data.map(x=>x.best);
+ const max=Math.max(...vals),min=Math.min(...vals),span=Math.max(.01,max-min);
+ const chart=document.getElementById('chart');
+ chart.innerHTML=data.map((x,i)=>{
+   const normalized=(max-x.best)/span;
+   const h=48+normalized*42;
+   const d=new Date(x.date);
+   const label=isNaN(d)?'Saved':d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+   return `<div class="bar" style="height:${h}%"><b>${x.best.toFixed(2)}</b><span>${label}</span></div>`
+ }).join('');
+ const first=data[0].best,last=data[data.length-1].best,impr=((first-last)/first*100);
+ document.getElementById('improvement').innerHTML=`<b>${impr.toFixed(1)}% faster since baseline</b><div class="muted">${saved.length?`${saved.length} assessment${saved.length>1?'s':''} saved on this device.`:'Demo trend shown until you save a live assessment.'}</div>`;
+}
+function toast(msg){
+ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2200)
+}
+openPlayer('Liam');showScreen('dashboard');
+</script>
+</body>
+</html>
